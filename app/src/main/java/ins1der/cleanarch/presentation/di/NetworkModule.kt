@@ -27,8 +27,6 @@ val networkModule = module {
     single { createMoshi() }
 
     single { createApiDataSource(get()) }
-
-    single { createEmployeeRepository(get()) }
 }
 
 fun createOkHttpClient(): OkHttpClient {
@@ -63,8 +61,4 @@ fun createApiService(retrofit: Retrofit): ApiService {
 
 fun createApiDataSource(apiService: ApiService): ApiDataSource {
     return ApiDataSource(apiService)
-}
-
-fun createEmployeeRepository(apiDataSource: ApiDataSource): PlanetRepository {
-    return PlanetsRepositoryImpl(apiDataSource)
 }

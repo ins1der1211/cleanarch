@@ -1,7 +1,8 @@
-package ins1der.cleanarch.data.models
+package ins1der.cleanarch.data.models.api
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import ins1der.cleanarch.data.models.db.PlanetEntity
 import ins1der.cleanarch.domain.models.Planet
 
 @JsonClass(generateAdapter = true)
@@ -23,4 +24,10 @@ fun PlanetAPI.mapToDomain(): Planet = Planet(
     name = name,
     population = population,
     surfaceWater = surfaceWater
+)
+
+fun PlanetAPI.mapToDb(): PlanetEntity = PlanetEntity(
+    name = name,
+    surfaceWater = surfaceWater,
+    population = population
 )

@@ -1,6 +1,6 @@
 package ins1der.cleanarch.data.sources.network
 
-import ins1der.cleanarch.data.models.PlanetsResponse
+import ins1der.cleanarch.data.models.api.PlanetsResponse
 import retrofit2.Response
 
 class ApiDataSource(private val apiService: ApiService) {
