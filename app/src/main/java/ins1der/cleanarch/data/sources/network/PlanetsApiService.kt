@@ -4,8 +4,8 @@ import ins1der.cleanarch.data.models.api.PlanetsResponse
 import retrofit2.Response
 import retrofit2.http.GET
 
-interface ApiService {
+interface PlanetsApiService {
 
-    @GET("planets")
+    @GET(".")
     suspend fun getPlanets(): Response<PlanetsResponse>
 }
