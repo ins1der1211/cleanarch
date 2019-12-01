@@ -1,7 +1,6 @@
 package ins1der.cleanarch.presentation.di
 
 import com.squareup.moshi.Moshi
-import ins1der.cleanarch.data.sources.network.ApiDataSource
 import ins1der.cleanarch.data.sources.network.PeopleApiService
 import ins1der.cleanarch.data.sources.network.PlanetsApiService
 import okhttp3.OkHttpClient
@@ -26,8 +25,6 @@ val networkModule = module {
 
     single(named("people")) { createPeopleRetrofit(get(), BASE_PEOPLE_URL) }
     single { createPeopleApiService(get(named("people"))) }
-
-    single { createApiDataSource(get(), get()) }
 }
 
 fun createOkHttpClient(): OkHttpClient {
@@ -68,9 +65,4 @@ fun createPeopleRetrofit(okHttpClient: OkHttpClient, url: String): Retrofit {
 
 fun createPeopleApiService(retrofit: Retrofit): PeopleApiService {
     return retrofit.create(PeopleApiService::class.java)
-}
-
-fun createApiDataSource(planetsApiService: PlanetsApiService,
-                        peopleApiService: PeopleApiService): ApiDataSource {
-    return ApiDataSource(planetsApiService, peopleApiService)
 }
