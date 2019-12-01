@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import ins1der.cleanarch.R
 import ins1der.cleanarch.presentation.ui.base.BaseActivity
+import ins1der.cleanarch.presentation.ui.extensions.startActivity
 import ins1der.cleanarch.presentation.ui.extensions.toast
+import ins1der.cleanarch.presentation.ui.second.SecondActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -21,6 +23,7 @@ class MainActivity: BaseActivity() {
         initViewStateObserver()
         if (savedInstanceState == null) mainViewModel.getPlanets()
         response_tv.setOnClickListener { mainViewModel.getPlanets() }
+        open_second_fab.setOnClickListener { startActivity<SecondActivity>() }
     }
 
     private fun initViewStateObserver() {

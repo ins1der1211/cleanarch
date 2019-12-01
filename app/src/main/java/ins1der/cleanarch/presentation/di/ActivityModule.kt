@@ -1,10 +1,13 @@
 package ins1der.cleanarch.presentation.di
 
 import ins1der.cleanarch.presentation.ui.main.MainViewModel
+import ins1der.cleanarch.presentation.ui.second.SecondViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val activityModule = module {
 
     viewModel { MainViewModel(get()) }
+
+    viewModel { SecondViewModel(get()) }
 }

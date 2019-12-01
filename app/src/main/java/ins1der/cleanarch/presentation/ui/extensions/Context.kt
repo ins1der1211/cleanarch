@@ -1,7 +1,9 @@
 package ins1der.cleanarch.presentation.ui.extensions
 
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
+import ins1der.cleanarch.presentation.ui.base.BaseActivity
 
 fun Context.toast(content: Any, length: Int = Toast.LENGTH_SHORT): Toast {
     val message = when (content) {
@@ -11,4 +13,8 @@ fun Context.toast(content: Any, length: Int = Toast.LENGTH_SHORT): Toast {
     }
 
     return Toast.makeText(this, message, length).also { it.show() }
+}
+
+inline fun<reified T> Context.startActivity() where T: BaseActivity {
+    startActivity(Intent(this, T::class.java))
 }
