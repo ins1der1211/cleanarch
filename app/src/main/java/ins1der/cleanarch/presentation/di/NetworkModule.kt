@@ -5,7 +5,6 @@ import ins1der.cleanarch.data.repositories.EmployeesRepositoryImpl
 import ins1der.cleanarch.data.sources.network.ApiDataSource
 import ins1der.cleanarch.data.sources.network.ApiService
 import ins1der.cleanarch.domain.repositories.EmployeeRepository
-import ins1der.cleanarch.domain.usecases.GetEmployeeUseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -17,7 +16,7 @@ val BASE_URL = "http://dummy.restapiexample.com/api/v1/"
 
 val networkModule = module {
 
-    single { createService(get()) }
+    single { createApiService(get()) }
 
     single { createRetrofit(get(), BASE_URL) }
 
@@ -54,7 +53,7 @@ fun createMoshiConverterFactory(): MoshiConverterFactory {
 }
 
 
-fun createService(retrofit: Retrofit): ApiService {
+fun createApiService(retrofit: Retrofit): ApiService {
     return retrofit.create(ApiService::class.java)
 }
 
