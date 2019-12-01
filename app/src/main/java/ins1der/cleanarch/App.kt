@@ -35,13 +35,8 @@ class App: Application() {
 
 /*
 
-prefs
 paging
-navigation
-files
 services
 workmanager
-get shared viewmodel from activity
-
 
  */
