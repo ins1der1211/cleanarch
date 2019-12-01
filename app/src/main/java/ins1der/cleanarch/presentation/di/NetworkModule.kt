@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-val BASE_URL = "https://swapi.co/api"
+val BASE_URL = "https://swapi.co/api/"
 
 val networkModule = module {
 

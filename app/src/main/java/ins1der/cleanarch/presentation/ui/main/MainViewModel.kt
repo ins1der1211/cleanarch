@@ -8,23 +8,35 @@ import ins1der.cleanarch.common.ResultType
 import ins1der.cleanarch.domain.usecases.GetPlanetsUseCase
 import ins1der.cleanarch.presentation.ui.models.PlanetUI
 import ins1der.cleanarch.presentation.ui.models.mapToUI
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel(private val getPlanetsUseCase: GetPlanetsUseCase): ViewModel() {
 
-    private val _planets = MutableLiveData<List<PlanetUI>?>()
-    val planets: LiveData<List<PlanetUI>?> = _planets
+    private val _viewState = MutableLiveData<ViewState>()
+    val viewState: LiveData<ViewState> = _viewState
 
     fun getPlanets() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val res = getPlanetsUseCase.execute()
-                if (res.resultType == ResultType.SUCCESS) {
-                    _planets.postValue(res.data?.map { it.mapToUI() })
+        viewModelScope.launch(
+            block = {
+                withContext(Dispatchers.IO) {
+                    val res = getPlanetsUseCase.execute()
+                    if (res.resultType == ResultType.SUCCESS) {
+                        _viewState.postValue(ViewState(planets = res.data?.map { it.mapToUI() }))
+                    } else {
+                        _viewState.postValue(ViewState(error = res.error?.message))
+                    }
                 }
-            }
-        }
+            },
+            context = CoroutineExceptionHandler { ctx, t ->
+                _viewState.postValue(ViewState(error = t.message))
+            })
     }
 }
+
+data class ViewState(
+    val planets: List<PlanetUI>? = null,
+    val error: String? = null
+)
