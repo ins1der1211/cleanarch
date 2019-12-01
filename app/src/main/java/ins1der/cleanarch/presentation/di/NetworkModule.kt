@@ -1,10 +1,10 @@
 package ins1der.cleanarch.presentation.di
 
 import com.squareup.moshi.Moshi
-import ins1der.cleanarch.data.repositories.EmployeesRepositoryImpl
+import ins1der.cleanarch.data.repositories.PlanetsRepositoryImpl
 import ins1der.cleanarch.data.sources.network.ApiDataSource
 import ins1der.cleanarch.data.sources.network.ApiService
-import ins1der.cleanarch.domain.repositories.EmployeeRepository
+import ins1der.cleanarch.domain.repositories.PlanetRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-val BASE_URL = "http://dummy.restapiexample.com/api/v1/"
+val BASE_URL = "https://swapi.co/api"
 
 val networkModule = module {
 
@@ -25,6 +25,10 @@ val networkModule = module {
     single { createMoshiConverterFactory() }
 
     single { createMoshi() }
+
+    single { createApiDataSource(get()) }
+
+    single { createEmployeeRepository(get()) }
 }
 
 fun createOkHttpClient(): OkHttpClient {
@@ -61,6 +65,6 @@ fun createApiDataSource(apiService: ApiService): ApiDataSource {
     return ApiDataSource(apiService)
 }
 
-fun createEmployeeRepository(apiDataSource: ApiDataSource): EmployeeRepository {
-    return EmployeesRepositoryImpl(apiDataSource)
+fun createEmployeeRepository(apiDataSource: ApiDataSource): PlanetRepository {
+    return PlanetsRepositoryImpl(apiDataSource)
 }

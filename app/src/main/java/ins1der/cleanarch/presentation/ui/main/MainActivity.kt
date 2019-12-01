@@ -16,7 +16,12 @@ class MainActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mainViewModel.employees.observe(this, Observer {
+        initObserves()
+        mainViewModel.getPlanets()
+    }
+
+    private fun initObserves() {
+        mainViewModel.planets.observe(this, Observer {
             it?.let {
                 with (StringBuilder()) {
                     it.forEach {
