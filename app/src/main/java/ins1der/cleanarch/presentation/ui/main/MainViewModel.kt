@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class MainViewModel(private val getPlanetsUseCase: GetPlanetsUseCase): ViewModel() {
 
@@ -19,6 +20,7 @@ class MainViewModel(private val getPlanetsUseCase: GetPlanetsUseCase): ViewModel
     val viewState: LiveData<ViewState> = _viewState
 
     fun getPlanets() {
+        Timber.d("getPlanets called")
         viewModelScope.launch(
             block = {
                 withContext(Dispatchers.IO) {
