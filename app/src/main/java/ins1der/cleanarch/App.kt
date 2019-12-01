@@ -34,9 +34,5 @@ class App: Application() {
 }
 
 /*
-
 paging
-services
-workmanager
-
  */
