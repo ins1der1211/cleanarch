@@ -2,6 +2,7 @@ package ins1der.cleanarch.presentation.di
 
 import ins1der.cleanarch.data.repositories.PeopleRepositoryImpl
 import ins1der.cleanarch.data.repositories.PlanetsRepositoryImpl
+import ins1der.cleanarch.data.sources.db.PeopleDatabase
 import ins1der.cleanarch.data.sources.db.PlanetDatabase
 import ins1der.cleanarch.data.sources.network.PeopleApiService
 import ins1der.cleanarch.data.sources.network.PlanetsApiService
@@ -14,7 +15,7 @@ val repositoryModule = module {
 
     single { createPlanetRepository(get(), get(), get()) }
 
-    single { createPeopleRepository(get()) }
+    single { createPeopleRepository(get(), get()) }
 }
 
 fun createPlanetRepository(planetsApiService: PlanetsApiService,
@@ -23,6 +24,7 @@ fun createPlanetRepository(planetsApiService: PlanetsApiService,
     return PlanetsRepositoryImpl(planetsApiService, planetDatabase, sharedPrefsDataSource)
 }
 
-fun createPeopleRepository(peopleApiService: PeopleApiService): PeopleRepository {
-    return PeopleRepositoryImpl(peopleApiService)
+fun createPeopleRepository(peopleApiService: PeopleApiService,
+                           peopleDatabase: PeopleDatabase): PeopleRepository {
+    return PeopleRepositoryImpl(peopleApiService, peopleDatabase)
 }

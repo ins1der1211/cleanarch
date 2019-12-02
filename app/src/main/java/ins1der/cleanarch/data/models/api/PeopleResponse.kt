@@ -2,6 +2,7 @@ package ins1der.cleanarch.data.models.api
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import ins1der.cleanarch.data.models.db.PersonEntity
 import ins1der.cleanarch.domain.models.Person
 
 @JsonClass(generateAdapter = true)
@@ -19,6 +20,11 @@ data class PersonAPI(
 )
 
 fun PersonAPI.mapToDomain(): Person = Person(
+    name = name,
+    url = url
+)
+
+fun PersonAPI.mapToDb(): PersonEntity = PersonEntity(
     name = name,
     url = url
 )

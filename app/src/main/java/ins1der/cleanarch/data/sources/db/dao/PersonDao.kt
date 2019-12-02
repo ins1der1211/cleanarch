@@ -10,7 +10,7 @@ import ins1der.cleanarch.data.models.db.PersonEntity
 @Dao
 interface PersonDao {
 
-    @Query("SELECT * FROM people ORDER BY url ASC")
+    @Query("SELECT * FROM people ORDER BY url DESC")
     fun getPeople(): DataSource.Factory<Int, PersonEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
