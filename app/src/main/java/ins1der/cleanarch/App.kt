@@ -35,4 +35,8 @@ class App: Application() {
 
 /*
 paging
+separate all layers
+make boundaries
+use https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html instead my Result class
+
  */
