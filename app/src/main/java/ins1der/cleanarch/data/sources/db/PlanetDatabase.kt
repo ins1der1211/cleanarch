@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import ins1der.cleanarch.data.models.db.PlanetEntity
 import ins1der.cleanarch.data.sources.db.dao.PlanetDao
 
-@Database(entities = arrayOf(PlanetEntity::class), version = 1)
+@Database(entities = [PlanetEntity::class], version = 1, exportSchema = false)
 abstract class PlanetDatabase: RoomDatabase() {
     abstract fun planetDao(): PlanetDao
 }

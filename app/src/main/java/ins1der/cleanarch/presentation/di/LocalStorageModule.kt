@@ -18,11 +18,11 @@ val localStorageModule = module {
 }
 
 private fun createPlanetDatabase(ctx: Context): PlanetDatabase {
-    return Room.databaseBuilder(ctx, PlanetDatabase::class.java, "planets").build()
+    return Room.databaseBuilder(ctx, PlanetDatabase::class.java, "planets_db").build()
 }
 
 private fun createPeopleDatabase(ctx: Context): PeopleDatabase {
-    return Room.databaseBuilder(ctx, PeopleDatabase::class.java, "people").build()
+    return Room.databaseBuilder(ctx, PeopleDatabase::class.java, "people_db").build()
 }
 
 private fun createSharedPrefsDataSource(ctx: Context, moshi: Moshi): SharedPrefsDataSource {

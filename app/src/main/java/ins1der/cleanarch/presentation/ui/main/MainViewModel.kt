@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ins1der.cleanarch.common.ResultType
 import ins1der.cleanarch.domain.usecases.GetPlanetsUseCase
 import ins1der.cleanarch.presentation.ui.models.PlanetUI
 import ins1der.cleanarch.presentation.ui.models.mapToUI
@@ -25,10 +24,10 @@ class MainViewModel(private val getPlanetsUseCase: GetPlanetsUseCase): ViewModel
             block = {
                 withContext(Dispatchers.IO) {
                     val res = getPlanetsUseCase.execute()
-                    if (res.resultType == ResultType.SUCCESS) {
-                        _viewState.postValue(ViewState(planets = res.data?.map { it.mapToUI() }))
+                    if (res.isSuccess) {
+                        _viewState.postValue(ViewState(planets = res.getOrNull()?.map { it.mapToUI() }))
                     } else {
-                        _viewState.postValue(ViewState(error = res.error?.message))
+                        _viewState.postValue(ViewState(error = res.exceptionOrNull()?.message))
                     }
                 }
             },
