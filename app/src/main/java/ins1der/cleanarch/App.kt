@@ -34,7 +34,5 @@ class App: Application() {
 }
 
 /*
-paging
-separate all layers
-make boundaries
+separate all layers, make boundaries
  */
