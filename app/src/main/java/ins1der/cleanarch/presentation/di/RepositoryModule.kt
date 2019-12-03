@@ -15,7 +15,7 @@ val repositoryModule = module {
 
     single { createPlanetRepository(get(), get(), get()) }
 
-    single { createPeopleRepository(get(), get()) }
+    single { createPeopleRepository(get()) }
 }
 
 fun createPlanetRepository(planetsApiService: PlanetsApiService,
@@ -24,7 +24,6 @@ fun createPlanetRepository(planetsApiService: PlanetsApiService,
     return PlanetsRepositoryImpl(planetsApiService, planetDatabase, sharedPrefsDataSource)
 }
 
-fun createPeopleRepository(peopleApiService: PeopleApiService,
-                           peopleDatabase: PeopleDatabase): PeopleRepository {
-    return PeopleRepositoryImpl(peopleApiService, peopleDatabase)
+fun createPeopleRepository(peopleApiService: PeopleApiService): PeopleRepository {
+    return PeopleRepositoryImpl(peopleApiService)
 }
