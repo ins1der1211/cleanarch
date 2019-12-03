@@ -32,7 +32,3 @@ class App: Application() {
         }
     }
 }
-
-/*
-separate all layers, make boundaries
- */

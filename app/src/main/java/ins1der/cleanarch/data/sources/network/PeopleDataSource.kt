@@ -8,6 +8,7 @@ import ins1der.cleanarch.data.models.api.mapToUI
 import ins1der.cleanarch.data.utils.successBody
 import ins1der.cleanarch.presentation.ui.models.PersonUI
 import kotlinx.coroutines.*
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class PeopleDataSource(private val peopleApiService: PeopleApiService):
@@ -20,6 +21,7 @@ class PeopleDataSource(private val peopleApiService: PeopleApiService):
     val networkState = MutableLiveData<NetworkState>()
 
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, PersonUI>) {
+        Timber.d("loadInitial called")
         runBlocking(
             block = {
                 networkState.postValue(NetworkState.LOADING)
@@ -40,11 +42,12 @@ class PeopleDataSource(private val peopleApiService: PeopleApiService):
     }
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, PersonUI>) {
+        Timber.d("loadAfter called with key -> ${params.key}")
         runBlocking(
             block = {
-                networkState.postValue(NetworkState.LOADING)
                 if (params.key.isEmpty()) return@runBlocking
                 else {
+                    networkState.postValue(NetworkState.LOADING)
                     val result = peopleApiService.getPeople(params.key.split("=")[1].toInt())
                     retry = null
                     if (result.isSuccessful) {

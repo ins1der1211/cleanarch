@@ -2,7 +2,6 @@ package ins1der.cleanarch.presentation.di
 
 import ins1der.cleanarch.data.repositories.PeopleRepositoryImpl
 import ins1der.cleanarch.data.repositories.PlanetsRepositoryImpl
-import ins1der.cleanarch.data.sources.db.PeopleDatabase
 import ins1der.cleanarch.data.sources.db.PlanetDatabase
 import ins1der.cleanarch.data.sources.network.PeopleApiService
 import ins1der.cleanarch.data.sources.network.PlanetsApiService
