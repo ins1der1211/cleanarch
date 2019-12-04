@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SecondViewModel(private val getPeopleUseCase: GetPeopleUseCase): ViewModel() {
+class SecondViewModel(private val getPeopleUseCase: GetPeopleUseCase<PersonUI>): ViewModel() {
 
     private val _listing = MutableLiveData<Listing<PersonUI>>()
     val peopleList = Transformations.switchMap(_listing) {

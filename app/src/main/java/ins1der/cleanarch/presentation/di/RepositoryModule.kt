@@ -8,6 +8,8 @@ import ins1der.cleanarch.data.sources.network.PlanetsApiService
 import ins1der.cleanarch.data.sources.prefs.SharedPrefsDataSource
 import ins1der.cleanarch.domain.repositories.PeopleRepository
 import ins1der.cleanarch.domain.repositories.PlanetRepository
+import ins1der.cleanarch.presentation.ui.models.PersonUI
+import ins1der.cleanarch.presentation.ui.models.mapToUI
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -23,6 +25,6 @@ fun createPlanetRepository(planetsApiService: PlanetsApiService,
     return PlanetsRepositoryImpl(planetsApiService, planetDatabase, sharedPrefsDataSource)
 }
 
-fun createPeopleRepository(peopleApiService: PeopleApiService): PeopleRepository {
-    return PeopleRepositoryImpl(peopleApiService)
+fun createPeopleRepository(peopleApiService: PeopleApiService): PeopleRepository<PersonUI> {
+    return PeopleRepositoryImpl(peopleApiService) { it.mapToUI() }
 }
