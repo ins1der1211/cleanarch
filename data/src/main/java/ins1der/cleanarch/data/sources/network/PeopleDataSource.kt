@@ -2,40 +2,49 @@ package ins1der.cleanarch.data.sources.network
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import ins1der.cleanarch.data.models.NetworkState
-import ins1der.cleanarch.data.models.api.PersonAPI
+import ins1der.cleanarch.domain.models.PageState
+import ins1der.cleanarch.data.models.api.mapToDomain
 import ins1der.cleanarch.data.utils.successBody
+import ins1der.cleanarch.domain.models.Person
 import kotlinx.coroutines.*
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class PeopleDataSource<T>(private val peopleApiService: PeopleApiService,
-                          private val mapFunc: (PersonAPI) -> T):
+                          private val mapFunc: (Person) -> T,
+                          private val processFunc: (List<Person>) -> List<Person>):
     PageKeyedDataSource<String, T>(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.IO
 
     var retry: (() -> Any)? = null
-    val networkState = MutableLiveData<NetworkState>()
+    val pageState = MutableLiveData<PageState>()
 
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, T>) {
         Timber.d("loadInitial called")
         runBlocking(
             block = {
-                networkState.postValue(NetworkState.LOADING)
+                pageState.postValue(PageState.LOADING)
                 val result = peopleApiService.getPeople(1)
                 retry = null
                 if (result.isSuccessful) {
-                    networkState.postValue(NetworkState.LOADED)
-                    callback.onResult(result.successBody().people.map { mapFunc(it) },
-                        result.successBody().prevPage ?: "", result.successBody().nextPage ?: "")
+                    val resp = result.successBody()
+                    pageState.postValue(PageState.LOADED)
+                    val apiList = resp.people
+                    // possibility to apply domain logic with mapping by single item
+                    val domainList1 = apiList.map { it.mapToDomain() }
+                    // possibility to apply domain logic with processing by page
+                    val domainList2 = processFunc(domainList1)
+                    // after processing on domain layer get the final result
+                    val tList = domainList2.map(mapFunc)
+                    callback.onResult(tList, resp.prevPage ?: "", resp.nextPage ?: "")
                 } else {
-                    networkState.postValue(NetworkState.error(null))
+                    pageState.postValue(PageState.error(null))
                 }
             },
             context = CoroutineExceptionHandler { _, t ->
-                networkState.postValue(NetworkState.error(t.message))
+                pageState.postValue(PageState.error(t.message))
                 retry = { loadInitial(params, callback) }
             })
     }
@@ -46,20 +55,27 @@ class PeopleDataSource<T>(private val peopleApiService: PeopleApiService,
             block = {
                 if (params.key.isEmpty()) return@runBlocking
                 else {
-                    networkState.postValue(NetworkState.LOADING)
+                    pageState.postValue(PageState.LOADING)
                     val result = peopleApiService.getPeople(params.key.split("=")[1].toInt())
                     retry = null
                     if (result.isSuccessful) {
-                        networkState.postValue(NetworkState.LOADED)
-                        callback.onResult(result.successBody().people.map { mapFunc(it) },
-                            result.successBody().nextPage ?: "")
+                        val resp = result.successBody()
+                        pageState.postValue(PageState.LOADED)
+                        val apiList = resp.people
+                        // possibility to apply domain logic with mapping by single item
+                        val domainList1 = apiList.map { it.mapToDomain() }
+                        // possibility to apply domain logic with processing by page
+                        val domainList2 = processFunc(domainList1)
+                        // after processing on domain layer get the final result
+                        val tList = domainList2.map(mapFunc)
+                        callback.onResult(tList, resp.nextPage ?: "")
                     } else {
-                        networkState.postValue(NetworkState.error(null))
+                        pageState.postValue(PageState.error(null))
                     }
                 }
             },
             context = CoroutineExceptionHandler { _, t ->
-                networkState.postValue(NetworkState.error(t.message))
+                pageState.postValue(PageState.error(t.message))
                 retry = { loadAfter(params, callback) }
             })
     }

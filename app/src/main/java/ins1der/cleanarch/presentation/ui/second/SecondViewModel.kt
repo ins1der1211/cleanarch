@@ -1,13 +1,11 @@
 package ins1der.cleanarch.presentation.ui.second
 
 import androidx.lifecycle.*
-import ins1der.cleanarch.data.models.Listing
+import ins1der.cleanarch.domain.models.Listing
 import ins1der.cleanarch.domain.usecases.GetPeopleUseCase
 import ins1der.cleanarch.presentation.ui.models.PersonUI
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SecondViewModel(private val getPeopleUseCase: GetPeopleUseCase<PersonUI>): ViewModel() {
 
@@ -16,7 +14,7 @@ class SecondViewModel(private val getPeopleUseCase: GetPeopleUseCase<PersonUI>):
         it.pagedList
     }
     val networkState = Transformations.switchMap(_listing) {
-        it.networkState
+        it.pageState
     }
     private val _viewState = MutableLiveData<ViewState>()
     val viewState: LiveData<ViewState> = _viewState
@@ -24,7 +22,7 @@ class SecondViewModel(private val getPeopleUseCase: GetPeopleUseCase<PersonUI>):
     fun getPeople() {
         viewModelScope.launch(
             block = {
-                _listing.value = getPeopleUseCase.execute<Listing<PersonUI>>(10, 10).getOrThrow()
+                _listing.value = getPeopleUseCase.execute(10, 10).getOrThrow()
             },
             context = CoroutineExceptionHandler { _, t ->
                 _viewState.postValue(Error(t.message))

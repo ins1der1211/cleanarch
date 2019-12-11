@@ -1,6 +1,9 @@
 package ins1der.cleanarch.domain.repositories
 
+import ins1der.cleanarch.domain.models.Listing
+import ins1der.cleanarch.domain.models.Person
+
 interface PeopleRepository<T> {
 
-    fun <R> getPeople(pageSize: Int, initSize: Int): Result<R>
+    fun getPeoplePaged(pageSize: Int, initSize: Int, processFunc: (List<Person>) -> List<Person>): Result<Listing<T>>
 }

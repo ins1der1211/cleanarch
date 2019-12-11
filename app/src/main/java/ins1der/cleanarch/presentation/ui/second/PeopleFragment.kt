@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import ins1der.cleanarch.R
-import ins1der.cleanarch.data.models.Status
+import ins1der.cleanarch.domain.models.Status
 import ins1der.cleanarch.presentation.ui.base.BaseFragment
 import ins1der.cleanarch.presentation.ui.extensions.gone
 import ins1der.cleanarch.presentation.ui.extensions.toast
