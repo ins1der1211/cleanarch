@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ins1der.cleanarch.domain.usecases.ChangeRandomPlanetUseCase
 import ins1der.cleanarch.domain.usecases.GetPlanetsUseCase
 import ins1der.cleanarch.presentation.ui.models.PlanetUI
 import ins1der.cleanarch.presentation.ui.models.mapToUI
@@ -13,21 +14,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class MainViewModel(private val getPlanetsUseCase: GetPlanetsUseCase): ViewModel() {
+class MainViewModel(private val getPlanetsUseCase: GetPlanetsUseCase,
+                    private val changeRandomPlanetUseCase: ChangeRandomPlanetUseCase): ViewModel() {
 
     private val _viewState = MutableLiveData<ViewState>()
     val viewState: LiveData<ViewState> = _viewState
 
-    fun getPlanets() {
-        Timber.d("getPlanets called")
+    val planets = getPlanetsUseCase.planetsLive
+
+    fun loadPlanets(update: Boolean = false) {
+        Timber.d("loadPlanets($update) called")
         viewModelScope.launch(
             block = {
                 withContext(Dispatchers.IO) {
-                    val res = getPlanetsUseCase.execute()
-                    if (res.isSuccess) {
-                        _viewState.postValue(ViewState(planets = res.getOrNull()?.map { it.mapToUI() }))
-                    } else {
-                        _viewState.postValue(ViewState(error = res.exceptionOrNull()?.message))
+                    val res = getPlanetsUseCase.execute(update)
+                    res.exceptionOrNull()?.let {
+                        _viewState.postValue(ViewState(error = it.message))
                     }
                 }
             },
@@ -35,9 +37,21 @@ class MainViewModel(private val getPlanetsUseCase: GetPlanetsUseCase): ViewModel
                 _viewState.postValue(ViewState(error = t.message))
             })
     }
+
+    fun changeRandomPlanet() {
+        viewModelScope.launch(
+            block = {
+                withContext(Dispatchers.IO) {
+                    changeRandomPlanetUseCase.execute()
+                }
+            },
+            context = CoroutineExceptionHandler { _, t ->
+                _viewState.postValue(ViewState(error = t.message))
+            }
+        )
+    }
 }
 
 data class ViewState(
-    val planets: List<PlanetUI>? = null,
     val error: String? = null
 )

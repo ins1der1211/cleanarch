@@ -26,8 +26,9 @@ class MainActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViewStateObserver()
-        if (savedInstanceState == null) mainViewModel.getPlanets()
-        response_tv.setOnClickListener { mainViewModel.getPlanets() }
+        if (savedInstanceState == null) mainViewModel.loadPlanets()
+        refresh_fab.setOnClickListener { mainViewModel.loadPlanets(true) }
+        change_random_fab.setOnClickListener { mainViewModel.changeRandomPlanet() }
         open_second_fab.setOnClickListener { startActivity<SecondActivity>() }
         startWork()
     }
@@ -35,13 +36,13 @@ class MainActivity: BaseActivity() {
     private fun initViewStateObserver() {
         mainViewModel.viewState.observe(this, Observer {
             Timber.d("view state observe called")
-            it.planets?.let {
-                with (StringBuilder()) {
-                    it.forEach { append(it.toString()).append("\n") }
-                    response_tv?.text = toString()
-                }
-            }
             it.error?.let { toast(it) }
+        })
+        mainViewModel.planets.observe(this, Observer {
+            with (StringBuilder()) {
+                it.forEach { append(it.toString()).append("\n") }
+                response_tv?.text = toString()
+            }
         })
     }
 

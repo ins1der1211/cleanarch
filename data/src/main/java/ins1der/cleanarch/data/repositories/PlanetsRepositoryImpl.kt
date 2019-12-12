@@ -1,10 +1,8 @@
 package ins1der.cleanarch.data.repositories
 
-import androidx.arch.core.util.Function
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import ins1der.cleanarch.data.models.api.mapToDb
-import ins1der.cleanarch.data.models.api.mapToDomain
-import ins1der.cleanarch.data.models.db.PlanetEntity
 import ins1der.cleanarch.data.models.db.mapToDomain
 import ins1der.cleanarch.data.sources.db.PlanetDatabase
 import ins1der.cleanarch.data.sources.network.PlanetsApiService
@@ -18,34 +16,27 @@ class PlanetsRepositoryImpl(private val planetsApiService: PlanetsApiService,
                             private val planetDatabase: PlanetDatabase,
                             private val sharedPrefsDataSource: SharedPrefsDataSource): PlanetRepository {
 
-    override suspend fun getPlanets(): Result<List<Planet>> {
+    override val planetsLive: LiveData<List<Planet>> = Transformations.map(planetDatabase.planetDao().getPlanetsLive()) {
+        it.map { it.mapToDomain() }
+    }
+
+    override suspend fun loadPlanets(force: Boolean): Result<Any> {
+        if (force) {
+            planetDatabase.planetDao().deleteAllPlanets()
+        }
         val cached = planetDatabase.planetDao().getPlanets()
-        return if (cached.isNullOrEmpty()) {
+        if (cached.isEmpty()) {
             val result = planetsApiService.getPlanets()
             if (result.isSuccessful) {
                 planetDatabase.planetDao().savePlanets(result.successBody().planets.map { it.mapToDb() })
-                Result.success(result.successBody().planets.map { it.mapToDomain() })
             } else {
-                Result.failure(result.error())
+                return Result.failure(result.error())
             }
-        } else {
-            Result.success(cached.map { it.mapToDomain() })
         }
+        return Result.success(Object())
     }
 
-//    override suspend fun getPlanets(): Result<List<Planet>> {
-//        val cached = sharedPrefsDataSource.planets
-//        return if (cached.isNullOrEmpty()) {
-//            val result = planetsApiService.getPlanets()
-//            if (result.isSuccessful) {
-//                sharedPrefsDataSource.planets = result.successBody().planets
-//                Result.success(result.successBody().planets.map { it.mapToDomain() })
-//            } else {
-//                Result.failure(result.error())
-//            }
-//        } else {
-//            Result.success(cached.map { it.mapToDomain() })
-//        }
-//    }
-
+    override suspend fun changePopulation(planet: Planet, population: Long) {
+        planetDatabase.planetDao().changePopulation(planet, population)
+    }
 }

@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val activityModule = module {
 
-    viewModel { MainViewModel(get()) }
+    viewModel { MainViewModel(get(), get()) }
 
     viewModel { SecondViewModel(get()) }
 }

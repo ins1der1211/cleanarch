@@ -1,8 +1,13 @@
 package ins1der.cleanarch.domain.repositories
 
+import androidx.lifecycle.LiveData
 import ins1der.cleanarch.domain.models.Planet
 
 interface PlanetRepository {
 
-    suspend fun getPlanets(): Result<List<Planet>>
+    val planetsLive: LiveData<List<Planet>>
+
+    suspend fun loadPlanets(force: Boolean): Result<Any>
+
+    suspend fun changePopulation(planet: Planet, population: Long)
 }
