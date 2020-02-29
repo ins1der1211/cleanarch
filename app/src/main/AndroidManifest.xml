@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ins1der.cleanarch">
+    package="ins1der.gifmaker">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".App"
+        android:name="ins1der.gifmaker.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,14 +15,14 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="true">
 
-        <activity android:name=".presentation.ui.main.MainActivity">
+        <activity android:name="ins1der.gifmaker.presentation.ui.main.MainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.ui.second.SecondActivity" />
+        <activity android:name="ins1der.gifmaker.presentation.ui.second.SecondActivity" />
 
     </application>
 </manifest>

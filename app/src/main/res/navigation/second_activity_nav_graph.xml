@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/peopleFragment"
-        android:name="ins1der.cleanarch.presentation.ui.second.PeopleFragment"
+        android:name="ins1der.gifmaker.presentation.ui.second.PeopleFragment"
         android:label="PeopleFragment" >
         <action
             android:id="@+id/action_peopleFragment_to_testFragment"
@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/testFragment"
-        android:name="ins1der.cleanarch.presentation.ui.second.TestFragment"
+        android:name="ins1der.gifmaker.presentation.ui.second.TestFragment"
         android:label="TestFragment" />
 
 </navigation>
